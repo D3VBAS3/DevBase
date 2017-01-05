@@ -8,8 +8,9 @@ function loginAttempt() {
   }
 }
 
-function loginSuccess(token) {
+function loginSuccess(token, email) {
   localStorage.setItem('devBase_user_token', token);
+  localStorage.setItem('devBase_user_email', email);
   console.log("LOCAL STORAGE:", localStorage);
   return {
     type: 'LOGIN_SUCCESS'
@@ -53,7 +54,7 @@ export default function login(userData) {
         // dispatch(loginSuccess());
         // browserHistory.push('/profile');
         console.log('DATA', data);
-        dispatch(loginSuccess(data.token));
+        dispatch(loginSuccess(data.token, data.email));
         browserHistory.push('/profile');
       })
       .catch((error) => {

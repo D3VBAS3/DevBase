@@ -65,7 +65,7 @@
 /******/ 	}
 /******/ 	
 /******/ 	var hotApplyOnUpdate = true;
-/******/ 	var hotCurrentHash = "ad623277aec9ca7e5427"; // eslint-disable-line no-unused-vars
+/******/ 	var hotCurrentHash = "a257a5ea93b40103c582"; // eslint-disable-line no-unused-vars
 /******/ 	var hotCurrentModuleData = {};
 /******/ 	var hotCurrentParents = []; // eslint-disable-line no-unused-vars
 /******/ 	
@@ -29396,8 +29396,9 @@
 	  };
 	}
 
-	function loginSuccess(token) {
+	function loginSuccess(token, email) {
 	  localStorage.setItem('devBase_user_token', token);
+	  localStorage.setItem('devBase_user_email', email);
 	  console.log("LOCAL STORAGE:", localStorage);
 	  return {
 	    type: 'LOGIN_SUCCESS'
@@ -29439,7 +29440,7 @@
 	      // dispatch(loginSuccess());
 	      // browserHistory.push('/profile');
 	      console.log('DATA', data);
-	      dispatch(loginSuccess(data.token));
+	      dispatch(loginSuccess(data.token, data.email));
 	      _reactRouter.browserHistory.push('/profile');
 	    }).catch(function (error) {
 	      dispatch(loginFail());
@@ -31473,6 +31474,11 @@
 	    var _this = _possibleConstructorReturn(this, (Profile.__proto__ || Object.getPrototypeOf(Profile)).call(this));
 
 	    _this.handleLogOut = _this.handleLogOut.bind(_this);
+
+	    _this.state = {
+	      profile_token: '',
+	      profile_email: ''
+	    };
 	    return _this;
 	  }
 
@@ -31482,6 +31488,11 @@
 	      console.log('component did mount token:', localStorage.getItem('devBase_user_token'));
 	      if (localStorage.getItem('devBase_user_token') === null) {
 	        _reactRouter.browserHistory.push('/');
+	      } else {
+	        this.setState({
+	          profile_token: localStorage.getItem('devBase_user_token'),
+	          profile_email: localStorage.getItem('devBase_user_email')
+	        });
 	      }
 	    }
 	  }, {
@@ -31495,7 +31506,12 @@
 	      return _react2.default.createElement(
 	        'div',
 	        null,
-	        'Profile',
+	        _react2.default.createElement(
+	          'div',
+	          null,
+	          this.state.profile_token,
+	          this.state.profile_email
+	        ),
 	        _react2.default.createElement(
 	          'button',
 	          { onClick: this.handleLogOut },
