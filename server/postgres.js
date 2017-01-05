@@ -1,13 +1,14 @@
 'use strict';
 const pg = require('pg');
 const Sequelize = require('sequelize');
-const sequelize = new Sequelize('postgres://morganpierson:mlp3330207@localhost:5432/devbase');
+const sequelize = new Sequelize('postgres://tester:ilovetesting@localhost:5432/devbase');
 const bodyParser = require('body-parser');
 const cookieParser = require('cookie-parser');
 const request = require('request');
 const express = require('express');
 const fs = require('fs');
 const path = require('path');
+const createToken = require('./util/createToken');
 
 const app = express();
 
@@ -18,27 +19,35 @@ let authentication = sequelize.define('members', {
 
 
 
-
-app.use(bodyParser());
+app.use(express.static(__dirname + './../client/'));
+app.use(bodyParser());   //front-end had bodyParser.json()
+app.use(bodyParser.urlencoded({ extended: true }));
 app.use(cookieParser());
-app.use(express.static(__dirname));
-app.use(function(req, res, next) {
-  res.header("Access-Control-Allow-Origin", "*");
-  res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
-  next();
+app.get('*', (req, res) => {
+  res.status(200).sendFile(path.resolve(__dirname + './../client/static/index.html'));
 });
 
-app.get('/loggedin', function(req, res) {
-  let userName = req.header.username;
+app.post('/login', (req, res) => {
+  //console.log('RESPONSE IN SERVER:', res);
+  //console.log('req.body:', req.body);
+  //res.cookie('user_id_cookie', req.body.username + '1', { httpOnly: true });
+  const token = createToken(1);
+  console.log('server:', token);
+  res.json({ token: token, email: req.body.email});
+});
 
-  //verify user against database username/password
-  //if valid:
+app.post('/logout', (req, res) => {
+  res.end();
+});
+// app.use(function(req, res, next) {
+//   res.header("Access-Control-Allow-Origin", "*");
+//   res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+//   next();
+// });
 
-  res.cookie('username', userName);
 
-})
 
-app.post('/', function(req, res) {
+app.post('/setdata', function(req, res) {
   //let user = req.cookies.username
   let user = 'mike';
   console.log('I POSTED TOO!')
@@ -61,9 +70,9 @@ console.log(data);
 
 
 
-app.listen(9999, () => {
+app.listen(8080, () => {
   sequelize.sync();
-  console.log('listening on port 9999...');
+  console.log('listening on port 8080...');
 })
 
 function parse(obj) {

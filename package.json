@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start": "nodemon server/server2.js",
+    "start": "nodemon server/postgres.js",
     "bundle": "node_modules/.bin/webpack",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
@@ -32,13 +32,14 @@
     "jsonwebtoken": "^7.2.1",
     "nodemon": "^1.11.0",
     "path": "^0.12.7",
+    "pg": "^6.1.2",
     "react": "^15.4.1",
     "react-dom": "^15.4.1",
     "react-redux": "^5.0.1",
     "react-router": "^3.0.0",
     "redux": "^3.6.0",
     "redux-thunk": "^2.1.0",
-    "pg": "^6.1.2",
+    "request": "^2.79.0",
     "sequelize": "^3.28.0"
   },
   "devDependencies": {
