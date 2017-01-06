@@ -32,6 +32,7 @@ app.post('/login', (req, res) => {
   //console.log('RESPONSE IN SERVER:', res);
   //console.log('req.body:', req.body);
   //res.cookie('user_id_cookie', req.body.username + '1', { httpOnly: true });
+
   let rando = Math.floor(Math.random()*1000);
   const token = createToken(rando);
   //console.log('server:', token);

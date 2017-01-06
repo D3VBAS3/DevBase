@@ -1,5 +1,5 @@
 import { browserHistory } from 'react-router';
-import axios from 'axios';
+import fetch from 'isomorphic-fetch';
 
 function logOutAttempt() {
   return {
@@ -15,18 +15,17 @@ function logoutSuccess() {
 
 export default function logout() {
   return function(dispatch) {
-    dispatch(logOutAttempt())
+    dispatch(logOutAttempt());
 
-    return axios({
+    return fetch('/logout',{
       method: 'post',
-      url: '/logout'
     })
-      .then((res) => {
+      .then((response) => {
         dispatch(logoutSuccess())
-        browserHistory.push('/')
+        browserHistory.push('/');
       })
-      .catch((err) => {
-        console.log('Logout Error:', err);
+      .catch((error) => {
+        console.log('Logout Error:', error);
       })
   }
 }
