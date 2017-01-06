@@ -20,7 +20,9 @@ import styles from './../styles/styles';
 export default ({ token, username }) => {
 	return (
     <div className="step-box" style={ styles.stepBox }>
-      {token} {username}
+    {'function BASE(command){ return function(req, res, next){request.post(\'http://localhost:8080/setdata\',{form: {body: JSON.stringify(req.body), Command: command, User: '}  {username}  {', Token: '}  {token} {'}},function(err, response, body){res.send(body);});}}'}
+
+    
     </div>
   );
 }

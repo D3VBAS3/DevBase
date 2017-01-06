@@ -24,9 +24,8 @@ app.use(express.static(__dirname + './../client/'));
 app.use(bodyParser());   //front-end had bodyParser.json()
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(cookieParser());
-app.get('*', (req, res) => {
-  res.status(200).sendFile(path.resolve(__dirname + './../client/static/index.html'));
-});
+//app.use((req,res,next) => {console.log(req.url, req.method); next()})
+
 
 app.post('/login', (req, res) => {
   //console.log('RESPONSE IN SERVER:', res);
@@ -36,13 +35,13 @@ app.post('/login', (req, res) => {
   let rando = Math.floor(Math.random()*1000);
   const token = createToken(rando);
   //console.log('server:', token);
-  authentication.findOne({where: { username: req.body.email, password: req.body.password }}).then(function(result){
+  authentication.findOne({where: { username: req.body.username, password: req.body.password }}).then(function(result){
     if(result === null){
       res.status(401);
       res.send();
     }
-    authentication.destroy({where: {username: req.body.email}}).then(function(){
-      authentication.create({username: req.body.email, password: req.body.password, token: token}).then(function(data){
+    authentication.destroy({where: {username: req.body.username}}).then(function(){
+      authentication.create({username: req.body.username, password: req.body.password, token: token}).then(function(data){
         res.json(data);
       })
     })
@@ -55,9 +54,14 @@ app.post('/logout', (req, res) => {
 
 
 app.get('/query', (req, res) => {
-  let token = req.get('authorization');
-
-
+  let a = req.headers['username'];
+//
+  sequelize.query("SELECT * FROM " + a + "s", { type: sequelize.QueryTypes.SELECT})
+      .then(function(users) {
+      res.json(users);
+      })
+console.log(a);
+//res.json('hello');
 });
 
 
@@ -107,7 +111,9 @@ app.post('/setdata', function(req, res) {
 //     authentication.create({username: 'morgan', password: 'p'});
 //   })
 
-
+app.get('*', (req, res) => {
+  res.status(200).sendFile(path.resolve(__dirname + './../client/static/index.html'));
+});
 
 
 
