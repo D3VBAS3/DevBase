@@ -2,23 +2,22 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { browserHistory } from 'react-router';
 import login from './../actions/login';
-import axios from 'axios';
 
 class LogInForm extends Component {
   constructor() {
     super();
 
     this.state = {
-      email: '',
+      username: '',
       password: ''
     }
     this.handleClick = this.handleClick.bind(this);
-    this.handleEmailChange = this.handleEmailChange.bind(this);
+    this.handleUsernameChange = this.handleUsernameChange.bind(this);
     this.handlePasswordChange = this.handlePasswordChange.bind(this);
   }
-  handleEmailChange(e) {
+  handleUsernameChange(e) {
     this.setState({
-      email: e.target.value
+      username: e.target.value
     });
   }
   handlePasswordChange(e) {
@@ -27,20 +26,17 @@ class LogInForm extends Component {
     });
   }
   handleClick(e) {
-    //e.preventDefault();
-    console.log('CLIIICCKKKEEDD');
-    const email = this.state.email;
+    const username = this.state.username;
     const password = this.state.password;
-    console.log('LOGIN FORM PROPS:', this.props);
     this.props.dispatch(login({ 
-      email: email, password: password
+      username: username, password: password
     }));
   }
   render() {
     return (
       <div>
         <h3>Log In</h3>
-        <input type='email' placeholder='email' value={ this.state.email } onChange={ this.handleEmailChange } className='email'/>
+        <input type='text' placeholder='username' value={ this.state.username } onChange={ this.handleUsernameChange } className='username'/>
         <input type='password' placeholder='password' value={ this.state.password } onChange={ this.handlePasswordChange } className='password'/>
         <button type='submit' className='loginBtn' onClick={ this.handleClick }>{ 'LOG IN' }</button>
       </div>

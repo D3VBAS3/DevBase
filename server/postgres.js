@@ -33,7 +33,7 @@ app.post('/login', (req, res) => {
   //res.cookie('user_id_cookie', req.body.username + '1', { httpOnly: true });
   const token = createToken(1);
   console.log('server:', token);
-  res.json({ token: token, email: req.body.email});
+  res.json({ token: token, username: req.body.username});
 });
 
 app.post('/logout', (req, res) => {
