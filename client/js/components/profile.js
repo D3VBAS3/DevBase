@@ -54,10 +54,7 @@ class Profile extends Component {
   render() {
     return (
       <div>
-        <div>
-          <p>{'Token: '}{this.state.profile_token}</p>
-          <p>{'Username: '}{this.state.profile_username}</p>
-        </div>
+       
         <div>
           <button onClick={this.handleLogOut}>LOG OUT</button>
         </div>

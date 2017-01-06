@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import styles from './../styles/styles';
 import query from './../actions/queryDB';
+import fetch from 'isomorphic-fetch';
 
 class Table extends Component {
     constructor() {
@@ -15,20 +16,22 @@ class Table extends Component {
       //this.continueQuery = this.continueQuery.bind(this); //might need?
     }
     componentDidMount() {
-      this.continueQuery = setInterval(this.queryDB(), 3000);
+      this.continueQuery = setInterval(this.queryDB, 3000);
     }
     queryDB() {
       //this.props.dispatch(query());
       fetch('/query', {
       method: 'get',
       headers: {
-        'Authorization': localStorage.getItem('devBase_user_token')
+        'Authorization': localStorage.getItem('devBase_user_token'),
+        'Username': localStorage.getItem('devBase_username')
       }
     })
       .then((response) => {
         if (response.status >= 400) {
             throw new Error("Bad response from server");
         }
+        
         return response.json();
       })
       .then((data) => {
@@ -42,13 +45,13 @@ class Table extends Component {
     }
     render() {
 
-      const tableRows = this.state.rowString.map((string) => {
-        return (<p>{string}</p>);
-      });
-
+      // const tableRows = this.state.rowString.map((string) => {
+      //   return (<p>{string}</p>);
+      //});
+      let aa = JSON.stringify(this.state.rowStrings);
       return (
         <div className='database-table-container' style={ styles.dbTable }>
-          {tableRows}
+        {aa}
         </div>
       );
     }
