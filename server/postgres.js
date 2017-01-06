@@ -14,7 +14,8 @@ const app = express();
 
 let authentication = sequelize.define('members', {
   username: Sequelize.STRING,
-  password: Sequelize.STRING
+  password: Sequelize.STRING,
+  token: Sequelize.STRING
 })
 
 
@@ -31,40 +32,79 @@ app.post('/login', (req, res) => {
   //console.log('RESPONSE IN SERVER:', res);
   //console.log('req.body:', req.body);
   //res.cookie('user_id_cookie', req.body.username + '1', { httpOnly: true });
-  const token = createToken(1);
-  console.log('server:', token);
-  res.json({ token: token, email: req.body.email});
+  let rando = Math.floor(Math.random()*1000);
+  const token = createToken(rando);
+  //console.log('server:', token);
+  authentication.findOne({where: { username: req.body.email, password: req.body.password }}).then(function(result){
+    if(result === null){
+      res.status(401);
+      res.send();
+    }
+    authentication.destroy({where: {username: req.body.email}}).then(function(){
+      authentication.create({username: req.body.email, password: req.body.password, token: token}).then(function(data){
+        res.json(data);
+      })
+    })
+  });
 });
 
 app.post('/logout', (req, res) => {
   res.end();
 });
-// app.use(function(req, res, next) {
-//   res.header("Access-Control-Allow-Origin", "*");
-//   res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
-//   next();
-// });
+
+
+app.get('/query', (req, res) => {
+  let token = req.get('authorization');
+
+
+});
 
 
 
 app.post('/setdata', function(req, res) {
-  //let user = req.cookies.username
-  let user = 'mike';
+  let action = req.body.Command.toUpperCase();
+  //let user = req.headers.User;
+  let user = 'mike';   //SWITCH FOR REAL USER
   console.log('I POSTED TOO!')
   if (!user) {
     res.send('ERROR')
   }
-  let data = parse(req.body.body);
+  let userTable;
+  switch(action){
 
-  let userTable = sequelize.define(user, data)
+    case 'WRITE':
+      let data = parse(req.body.body);
+      userTable = sequelize.define(user, data)
+      // console.log(data);
+      sequelize.sync({ force: false }).then(function () {
+        return userTable.create(JSON.parse(req.body.body));
+      });
 
-console.log(data);
+      break;
 
-  sequelize.sync({ force: true }).then(function () {
-    return userTable.create(JSON.parse(req.body.body));
-  })
+    case 'READ':
+      sequelize.query("SELECT * FROM " + user + "s", { type: sequelize.QueryTypes.SELECT})
+      .then(function(users) {
+      res.send(users);
+      })
+
+      break;
+
+    default: 
+
+    res.send('Invalid Command');
+
+  }
+
 })
-
+/////////to manually add users to members table//////////////
+// authentication.sync({ force: true }).then(function () {
+//     return authentication.create({username: 'grundle', password: 'bundle'}),
+//     authentication.create({username: 'shermarcus', password: 'code'}),
+//     authentication.create({username: 'mike', password: 'b'}),
+//     authentication.create({username: 'chris', password: 'c'}),
+//     authentication.create({username: 'morgan', password: 'p'});
+//   })
 
 
 
@@ -107,11 +147,15 @@ function parse(obj) {
 
 
 /////////////DEVBASE///////////////////////////////////////////
-// function devBaseRequest(command) {
-//   res.setHeader('Content-Type', 'application/json');
-//   res.setHeader('Command', command);
-//   res.setHeader('Source', 'localhost:3000');
-//   res.setHeader('Cookie', 'ourCookie');
-//   res.redirect('http://localhost:9999/loggedin');
+// function BASE(command){
+//   return function(req, res, next){
+//   request.post('http://localhost:8080/setdata',
+//   {form: {body: JSON.stringify(req.body), Command: command, User: 'mike', Token: '234234234234'}},
+//   function(err, response, body){
+//     console.log(body);
+//     res.send(body);
+//   });
+
+//   }
 // }
 //////////////////////////////////////////////////////////////
