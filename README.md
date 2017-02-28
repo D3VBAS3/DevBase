@@ -17,3 +17,12 @@ Note: DevBase is currently in development, the following instructions illustrate
 5. View your database table in real time in the browser while your application runs
 
 Note: Closing out of the DevBase webpage will invalidate your token, you will need to re-login and copy the code again, as it contains a session token.
+
+
+## For Contributors
+We encourage new contributions!
+
+Some goals that new contributors can work towards:
++ CSS styling of web page
++ Additional DB commands (besides Read/Write)
++ functionality for multiple tables and table relationships
