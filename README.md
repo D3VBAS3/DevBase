@@ -20,9 +20,9 @@ Note: Closing out of the DevBase webpage will invalidate your token, you will ne
 
 
 ## For Contributors
-We encourage new contributions!
+We encourage new contributors!
 
 Some goals that new contributors can work towards:
-+ CSS styling of web page
-+ Additional DB commands (besides Read/Write)
++ CSS styling of application
++ Additional DB commands
 + functionality for multiple tables and table relationships
